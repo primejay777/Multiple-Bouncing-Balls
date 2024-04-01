@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>My Multiple Balls</title>
+  </head>
+  <body>
+    <canvas id="canvas" width="300" height="300"></canvas>
+    <script type="text/javascript">
+      //Adjust The number of balls
+      let howManyBalls = 100;
+
+
+      //Get the canvas and its context
+      const canvas = document.getElementById('canvas');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const context = canvas.getContext('2d');
+
+
+      //Storage for balls
+      const balls = [];
+
+
+      //Loop for inserting numerous balls
+      for(let i = 0; i < howManyBalls; i++) {
+        const ball = {
+          x: 30,    //The X Position
+          y: 30,  //The Y Position
+          vx: Math.random() * 30,   //Random Speed in the X Axis
+          vy: Math.random() * 30,   //Random Speed in the Y Axis
+          radius: Math.random() * 30,   //Ball Radius
+          color: randomColor(),     //Random Color Funtion
+          outline: 'black'          //The Outline of the balls
+        }
+
+        //insert each ball
+        balls.push(ball);
+      }
+
+
+      //Function for the movement of the ball
+      function move(ball) {
+        ball.x += ball.vx;
+        ball.y += ball.vy;
+
+        if(ball.x + ball.radius >= canvas.width || ball.x - ball.radius <= 0) {
+          ball.vx = -ball.vx;
+        }
+
+        if(ball.y + ball.radius >= canvas.height || ball.y - ball.radius < 0) {
+          ball.vy = -ball.vy;
+        }
+      }
+
+
+      //Function for the drawing of the ball
+      function draw(ball) {
+        context.beginPath();
+        context.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+        context.fillStyle = ball.color;
+        context.strokeStyle = ball.outline;
+        context.fill();
+        context.stroke();
+      }
+
+
+      //Function for a random color
+      function randomColor() {
+        let r = Math.random() * 150;
+        let g = Math.random() * 150;
+        let b = Math.random() * 150;
+
+        return `rgb(${r}, ${g}, ${b})`;
+
+      };
+
+
+      //Funtion for anmating each ball
+      function animate() {
+
+        //Fill the color of the canvas each seconds
+        context.fillStyle = 'rgba(0, 0, 0, 0.5)';
+        context.fillRect(0, 0, canvas.width, canvas.height);
+
+        //Iterate inside the balls and call the function draw() & move()
+        for(const bola of balls) {
+          draw(bola);
+          move(bola);
+        }
+
+
+        //Animate it inside a funtion
+        requestAnimationFrame(animate);
+      }
+
+      //Call the function
+      animate();
+
+
+    </script>
+  </body>
+</html>
